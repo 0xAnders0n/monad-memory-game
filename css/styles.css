@@ -16,17 +16,16 @@ body {
   overflow-x: hidden;
 }
 
-/* Верхняя панель: слева (Time/Attempts), справа (NEW GAME) */
+/* Верхняя панель (Time/Attempts, NEW GAME) */
 .top-bar {
   position: absolute;
   top: 0; left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between; /* слева таймер, справа кнопка */
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
 }
-
 .game-info p {
   margin: 0;
   font-size: 30px;
@@ -36,7 +35,6 @@ body {
   color: #45134e;
 }
 
-/* NEW GAME (справа) */
 .new-game-btn {
   font-size: 30px;
   font-weight: bold;
@@ -56,12 +54,12 @@ body {
 
 /* Заголовок */
 h1 {
-  margin-top: 70px;    /* подняли выше */
+  margin-top: 70px;   
   font-size: 72px;
   text-transform: uppercase;
 }
 
-/* Правая колонка: радиокнопки выбора режима */
+/* Правая колонка */
 .right-panel {
   position: absolute;
   top: 120px;
@@ -86,16 +84,30 @@ h1 {
   cursor: pointer;
 }
 
+/* Контейнер для .game-board:
+   display: flex; justify-content: center; => центрирует
+   overflow-x: auto => прокрутка, если не влезает
+*/
+.board-container {
+  display: flex;
+  justify-content: center; 
+  overflow-x: auto;       
+  margin: 60px auto 40px; /* поднимаем поле выше => 60px */
+  width: 100%;            /* занимать всю ширину */
+}
+
 /* Игровое поле */
 .game-board {
   display: grid;
-  /* По умолчанию (placeholder) => 8x3 (24 карт), но
-     в реальности JS задаст 4x3 / 6x3 / 8x3 */
+  /* По умолчанию - placeholder 8×3 => 24 карт */
   grid-template-columns: repeat(8, 150px);
   grid-template-rows: repeat(3, 210px);
   gap: 15px;
-  justify-content: center;
-  margin: 60px auto 40px; /* Подняли ещё выше (60px) */
+  /* Чтобы само поле имело ширину только 
+     под контент (fit-content) => центрироваться
+     если оно меньше экрана */
+  width: fit-content; 
+  margin: 0;  /* всё управляет .board-container */
 }
 
 /* Карты */
@@ -154,8 +166,6 @@ h1 {
 /* =========================
    Адаптивные брейкпоинты
 ========================= */
-
-/* < 900px => уменьшаем размер карт */
 @media (max-width: 900px) {
   .card {
     width: 120px;
@@ -175,8 +185,6 @@ h1 {
     width: 180px;
   }
 }
-
-/* < 600px => ещё меньше карты */
 @media (max-width: 600px) {
   .card {
     width: 90px;

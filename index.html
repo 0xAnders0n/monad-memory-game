@@ -25,7 +25,7 @@
 <!-- Заголовок по центру -->
 <h1>MEMORY CARD GAME</h1>
 
-<!-- Правая колонка: выбор количества карт -->
+<!-- Правая колонка: выбор режима (12/18/24) -->
 <div class="right-panel">
   <h2>Card Options</h2>
   <p>Select the number of cards:</p>
@@ -43,8 +43,10 @@
   </label>
 </div>
 
-<!-- Игровое поле -->
-<div class="game-board" id="gameBoard"></div>
+<!-- Контейнер для прокрутки И центрирования -->
+<div class="board-container">
+  <div class="game-board" id="gameBoard"></div>
+</div>
 
 <!-- Звуки -->
 <audio id="shuffleSound" src="audio/shuffle.mp3" preload="auto"></audio>

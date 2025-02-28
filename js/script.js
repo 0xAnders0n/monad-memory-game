@@ -2,17 +2,11 @@ window.onload = () => {
   document.getElementById("newGameBtn").addEventListener("click", startNewGame);
 };
 
-/********************************************
- * Массив из 54 карт (img1...img54)
- ********************************************/
 const allImages = [];
 for (let i = 1; i <= 54; i++) {
   allImages.push(`img${i}.jpg`);
 }
 
-/********************************************
- * Выбрать N карт (12,18,24)
- ********************************************/
 function getRandomCards(selectedCount) {
   const pairs = selectedCount / 2;
   const shuffled = [...allImages].sort(() => Math.random() - 0.5);
@@ -22,25 +16,16 @@ function getRandomCards(selectedCount) {
   return result;
 }
 
-/********************************************
- * Установить grid (4x3, 6x3, 8x3)
- ********************************************/
 function setGrid(boardElement, selectedCount) {
-  let cols = 4; // default for 12
+  let cols = 4; // default => 12
   let rows = 3;
   if (selectedCount === 18) cols = 6;
   if (selectedCount === 24) cols = 8;
 
   boardElement.style.gridTemplateColumns = `repeat(${cols}, 150px)`;
   boardElement.style.gridTemplateRows = `repeat(${rows}, 210px)`;
-
-  // Поднимаем ещё выше => 60px auto 40px
-  boardElement.style.margin = "60px auto 40px";
 }
 
-/********************************************
- * Фон, музыка, etc
- ********************************************/
 const backgrounds = [
   "background/bg1.jpg",
   "background/bg2.jpg",
@@ -111,11 +96,7 @@ function changeBackground() {
 }
 setInterval(changeBackground, 10000);
 
-/********************************************
- * Новая игра
- ********************************************/
 function startNewGame() {
-  // Считываем выбранное кол-во карт
   const radios = document.getElementsByName("cardCount");
   for (let radio of radios) {
     if (radio.checked) {
@@ -138,14 +119,12 @@ function startNewGame() {
   clearInterval(timerInterval);
   changeBackground();
 
-  // Устанавливаем сетку (4x3, 6x3, 8x3)
   setGrid(board, selectedCardCount);
 
   const imagesArray = getRandomCards(selectedCardCount);
   const totalCards = imagesArray.length;
   let dealtCards = 0;
 
-  // Раздача
   imagesArray.forEach((imgSrc, index) => {
     setTimeout(() => {
       const card = document.createElement("div");
@@ -188,9 +167,6 @@ function startNewGame() {
   playBackgroundMusic();
 }
 
-/********************************************
- * Таймер
- ********************************************/
 function startTimer() {
   time = 0;
   document.getElementById("timer").textContent = time;
@@ -200,9 +176,6 @@ function startTimer() {
   }, 1000);
 }
 
-/********************************************
- * Переворот
- ********************************************/
 function flipCard(card) {
   if (!canFlip || flippedCards.length >= 2 || card.classList.contains("flipped")) return;
   card.classList.add("flipped");
@@ -214,9 +187,6 @@ function flipCard(card) {
   }
 }
 
-/********************************************
- * Проверка совпадений
- ********************************************/
 function checkMatch() {
   attempts++;
   document.getElementById("attempts").textContent = attempts;
@@ -226,7 +196,6 @@ function checkMatch() {
     document.getElementById("successSound").play();
     flippedCards = [];
     matchedPairs++;
-
     if (matchedPairs === selectedCardCount / 2) {
       clearInterval(timerInterval);
       setTimeout(finishGame, 500);
@@ -240,14 +209,10 @@ function checkMatch() {
   }
 }
 
-/********************************************
- * Завершение игры (формула очков)
- ********************************************/
 function finishGame() {
   const totalPairs = selectedCardCount / 2;
   const baseScore = totalPairs * 150;
   const penalty = (time * 2) + (attempts * 5);
-
   let score = baseScore - penalty;
   if (score < 0) score = 0;
 
