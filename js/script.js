@@ -2,24 +2,56 @@ window.onload = () => {
   document.getElementById("newGameBtn").addEventListener("click", startNewGame);
 };
 
-const images = [
-  "img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg",
-  "img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg"
-];
+/********************************************
+ * Массив из 54 карт (img1...img54)
+ ********************************************/
+const allImages = [];
+for (let i = 1; i <= 54; i++) {
+  allImages.push(`img${i}.jpg`);
+}
 
+/********************************************
+ * Выбрать N карт (12,18,24)
+ ********************************************/
+function getRandomCards(selectedCount) {
+  const pairs = selectedCount / 2;
+  const shuffled = [...allImages].sort(() => Math.random() - 0.5);
+  const picked = shuffled.slice(0, pairs);
+  const result = [...picked, ...picked];
+  result.sort(() => Math.random() - 0.5);
+  return result;
+}
+
+/********************************************
+ * Установить grid (4x3, 6x3, 8x3)
+ ********************************************/
+function setGrid(boardElement, selectedCount) {
+  let cols = 4; // default for 12
+  let rows = 3;
+  if (selectedCount === 18) cols = 6;
+  if (selectedCount === 24) cols = 8;
+
+  boardElement.style.gridTemplateColumns = `repeat(${cols}, 150px)`;
+  boardElement.style.gridTemplateRows = `repeat(${rows}, 210px)`;
+
+  // Поднимаем ещё выше => 60px auto 40px
+  boardElement.style.margin = "60px auto 40px";
+}
+
+/********************************************
+ * Фон, музыка, etc
+ ********************************************/
 const backgrounds = [
   "background/bg1.jpg",
   "background/bg2.jpg",
   "background/bg3.jpg"
 ];
-
 const musicTracks = [
   "background/music1.mp3",
   "background/music2.mp3",
   "background/music3.mp3"
 ];
 
-// Параметры игры
 let flippedCards = [];
 let matchedPairs = 0;
 let attempts = 0;
@@ -29,15 +61,20 @@ let currentBackgroundIndex = 0;
 let currentMusicIndex = 0;
 let canFlip = false;
 
+let selectedCardCount = 24;
+
 const board = document.getElementById("gameBoard");
 const backgroundMusic = new Audio();
 
-/********************************************
- *   ФОН МУЗЫКА
- ********************************************/
+document.addEventListener("click", () => {
+  if (backgroundMusic.paused) {
+    playBackgroundMusic();
+  }
+});
+
 function playBackgroundMusic() {
   backgroundMusic.src = musicTracks[currentMusicIndex];
-  backgroundMusic.volume = 0.25; 
+  backgroundMusic.volume = 0.25;
   backgroundMusic.play().catch(err => console.log("Autoplay prevented:", err));
 
   backgroundMusic.onended = () => fadeOutMusic();
@@ -68,15 +105,6 @@ function switchTrack() {
   }, 300);
 }
 
-document.addEventListener("click", () => {
-  if (backgroundMusic.paused) {
-    playBackgroundMusic();
-  }
-});
-
-/********************************************
- *   СМЕНА ФОНА КАЖДЫЕ 10 СЕК
- ********************************************/
 function changeBackground() {
   document.body.style.backgroundImage = `url('${backgrounds[currentBackgroundIndex]}')`;
   currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.length;
@@ -84,12 +112,21 @@ function changeBackground() {
 setInterval(changeBackground, 10000);
 
 /********************************************
- *   НОВАЯ ИГРА
+ * Новая игра
  ********************************************/
 function startNewGame() {
+  // Считываем выбранное кол-во карт
+  const radios = document.getElementsByName("cardCount");
+  for (let radio of radios) {
+    if (radio.checked) {
+      selectedCardCount = parseInt(radio.value);
+      break;
+    }
+  }
+
   board.innerHTML = "";
-  images.sort(() => Math.random() - 0.5);
   document.getElementById("shuffleSound").play();
+
   flippedCards = [];
   matchedPairs = 0;
   attempts = 0;
@@ -101,10 +138,15 @@ function startNewGame() {
   clearInterval(timerInterval);
   changeBackground();
 
-  let dealtCards = 0;
-  const totalCards = images.length;
+  // Устанавливаем сетку (4x3, 6x3, 8x3)
+  setGrid(board, selectedCardCount);
 
-  images.forEach((imgSrc, index) => {
+  const imagesArray = getRandomCards(selectedCardCount);
+  const totalCards = imagesArray.length;
+  let dealtCards = 0;
+
+  // Раздача
+  imagesArray.forEach((imgSrc, index) => {
     setTimeout(() => {
       const card = document.createElement("div");
       card.classList.add("card");
@@ -113,26 +155,24 @@ function startNewGame() {
       const cardInner = document.createElement("div");
       cardInner.classList.add("card-inner");
 
-      // Рубашка
       const backSide = document.createElement("div");
       backSide.classList.add("card-side", "card-back");
 
-      // Лицевая сторона
       const frontSide = document.createElement("div");
       frontSide.classList.add("card-side", "card-front");
+
       const faceImg = document.createElement("img");
       faceImg.src = `img/${imgSrc}`;
       faceImg.style.width = "100%";
       faceImg.style.height = "100%";
       faceImg.style.borderRadius = "8px";
-      frontSide.appendChild(faceImg);
 
+      frontSide.appendChild(faceImg);
       cardInner.appendChild(backSide);
       cardInner.appendChild(frontSide);
       card.appendChild(cardInner);
       board.appendChild(card);
 
-      // "Прилет" карты
       setTimeout(() => {
         card.classList.add("show");
         dealtCards++;
@@ -142,14 +182,14 @@ function startNewGame() {
         }
         card.addEventListener("click", () => flipCard(card));
       }, 200);
-    }, index * 1000);
+    }, index * 600);
   });
 
   playBackgroundMusic();
 }
 
 /********************************************
- *   ТАЙМЕР
+ * Таймер
  ********************************************/
 function startTimer() {
   time = 0;
@@ -161,7 +201,7 @@ function startTimer() {
 }
 
 /********************************************
- *   ПЕРЕВОРОТ КАРТЫ
+ * Переворот
  ********************************************/
 function flipCard(card) {
   if (!canFlip || flippedCards.length >= 2 || card.classList.contains("flipped")) return;
@@ -175,7 +215,7 @@ function flipCard(card) {
 }
 
 /********************************************
- *   ПРОВЕРКА СОВПАДЕНИЙ
+ * Проверка совпадений
  ********************************************/
 function checkMatch() {
   attempts++;
@@ -187,11 +227,9 @@ function checkMatch() {
     flippedCards = [];
     matchedPairs++;
 
-    if (matchedPairs === images.length / 2) {
+    if (matchedPairs === selectedCardCount / 2) {
       clearInterval(timerInterval);
-      setTimeout(() => {
-        finishGame();
-      }, 500);
+      setTimeout(finishGame, 500);
     }
   } else {
     document.getElementById("failSound").play();
@@ -203,15 +241,19 @@ function checkMatch() {
 }
 
 /********************************************
- *   ОКОНЧАНИЕ ИГРЫ + ПОДСЧЁТ ОЧКОВ (EN)
+ * Завершение игры (формула очков)
  ********************************************/
 function finishGame() {
-  // Формула очков: max(0, 1000 - (time * 2 + attempts * 5))
-  const base = 1000;
-  const timePenalty = time * 2;
-  const attemptPenalty = attempts * 5;
-  let score = base - (timePenalty + attemptPenalty);
+  const totalPairs = selectedCardCount / 2;
+  const baseScore = totalPairs * 150;
+  const penalty = (time * 2) + (attempts * 5);
+
+  let score = baseScore - penalty;
   if (score < 0) score = 0;
 
-  alert(`🎉 Congratulations! You finished the game in ${time} seconds with ${attempts} attempts.\nYour score: ${score}`);
+  alert(
+    `🎉 Congratulations!\n` +
+    `You finished ${selectedCardCount} cards in ${time} seconds and ${attempts} attempts.\n` +
+    `Your score: ${score}`
+  );
 }

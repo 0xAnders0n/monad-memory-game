@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MONAD MEMORY CARD GAME</title>
+  <title>MEMORY CARD GAME</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -11,15 +11,39 @@
 <!-- Верхняя панель: слева Time/Attempts, справа NEW GAME -->
 <div class="top-bar">
   <div class="game-info">
-    <p><span class="icon">⏳</span> <b>Time:</b> <span id="timer">0</span> sec | 
-       <span class="icon">🔄</span> <b>Attempts:</b> <span id="attempts">0</span></p>
+    <p>
+      <span class="icon">⏳</span> <b>Time:</b> 
+      <span id="timer">0</span> sec 
+      |
+      <span class="icon">🔄</span> <b>Attempts:</b> 
+      <span id="attempts">0</span>
+    </p>
   </div>
   <button class="new-game-btn" id="newGameBtn">NEW GAME</button>
 </div>
 
-<!-- Заголовок -->
-<h1>MONAD MEMORY CARD GAME</h1>
+<!-- Заголовок по центру -->
+<h1>MEMORY CARD GAME</h1>
 
+<!-- Правая колонка: выбор количества карт -->
+<div class="right-panel">
+  <h2>Card Options</h2>
+  <p>Select the number of cards:</p>
+  <label>
+    <input type="radio" name="cardCount" value="12" />
+    12 cards
+  </label><br>
+  <label>
+    <input type="radio" name="cardCount" value="18" />
+    18 cards
+  </label><br>
+  <label>
+    <input type="radio" name="cardCount" value="24" checked />
+    24 cards
+  </label>
+</div>
+
+<!-- Игровое поле -->
 <div class="game-board" id="gameBoard"></div>
 
 <!-- Звуки -->

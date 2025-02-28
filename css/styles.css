@@ -1,50 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
+/* =========================
+   Общие стили
+========================= */
+
 body {
-  /* Убираем белый цвет, делаем весь текст ярко-фиолетовым */
-  color: #d500f9;
+  color: #45134e;
   text-align: center;
   font-family: 'Orbitron', sans-serif;
   background: url('../background/bg1.jpg') no-repeat center center fixed;
   background-size: cover;
   transition: background-image 3s ease-in-out;
-  overflow: hidden;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
-/* Верхняя панель */
+/* Верхняя панель: слева (Time/Attempts), справа (NEW GAME) */
 .top-bar {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* слева таймер, справа кнопка */
   align-items: center;
   padding: 10px 20px;
 }
 
-/* Time / Attempts */
 .game-info p {
   margin: 0;
-  font-size: 40px; /* в 2 раза больше прежнего */
+  font-size: 30px;
   font-weight: bold;
 }
-
-/* Значки тоже ярко-фиолетовые (можно оставить тот же цвет, он уже inherited) */
 .game-info .icon {
-  color: #d500f9;
+  color: #45134e;
 }
 
-/* Кнопка NEW GAME (справа) */
+/* NEW GAME (справа) */
 .new-game-btn {
-  font-size: 40px;
+  font-size: 30px;
   font-weight: bold;
-  border: none;
-  background-color: transparent; /* уберем цвет фона, чтобы была ярко-фиолетовая */
-  color: #d500f9;               /* сам текст кнопки ярко-фиолетовый */
-  border: 2px solid #d500f9;
+  border: 2px solid #45134e;
+  background-color: transparent;
+  color: #45134e;
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s;
@@ -52,34 +50,60 @@ body {
   padding: 10px 20px;
 }
 .new-game-btn:hover {
-  background-color: #d500f9; /* при ховере */
-  color: white;              /* читаемость на фиолетовом фоне */
+  background-color: #45134e;
+  color: white;
 }
 
-/* Заголовок (2 раза крупнее) */
+/* Заголовок */
 h1 {
-  margin-top: 100px;
-  font-size: 72px; 
+  margin-top: 70px;    /* подняли выше */
+  font-size: 72px;
   text-transform: uppercase;
+}
+
+/* Правая колонка: радиокнопки выбора режима */
+.right-panel {
+  position: absolute;
+  top: 120px;
+  right: 20px;
+  width: 200px;
+  background: rgba(255,255,255,0.4);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: left;
+}
+.right-panel h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  text-align: center;
+}
+.right-panel p {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+.right-panel label {
+  font-size: 20px;
+  cursor: pointer;
 }
 
 /* Игровое поле */
 .game-board {
   display: grid;
-  grid-template-columns: repeat(4, 150px);
+  /* По умолчанию (placeholder) => 8x3 (24 карт), но
+     в реальности JS задаст 4x3 / 6x3 / 8x3 */
+  grid-template-columns: repeat(8, 150px);
+  grid-template-rows: repeat(3, 210px);
   gap: 15px;
   justify-content: center;
-  margin: 120px auto 20px;
+  margin: 60px auto 40px; /* Подняли ещё выше (60px) */
 }
 
-/* --- Карточки --- */
+/* Карты */
 .card {
   width: 150px;
   height: 210px;
   perspective: 1000px;
   cursor: pointer;
-
-  /* анимация "раздачи" */
   opacity: 0;
   transform: translateX(-500px) rotate(-30deg);
   transition: transform 1s ease-out, opacity 1s ease-in;
@@ -96,8 +120,6 @@ h1 {
   transition: transform 0.5s;
   position: relative;
 }
-
-/* По умолчанию => рубашка */
 .card-inner {
   transform: rotateY(0);
 }
@@ -105,7 +127,6 @@ h1 {
   transform: rotateY(180deg);
 }
 
-/* Стороны карты */
 .card-side {
   width: 100%;
   height: 100%;
@@ -113,14 +134,10 @@ h1 {
   backface-visibility: hidden;
   border-radius: 8px;
 }
-
-/* Рубашка */
 .card-back {
   background: url('../card-backs/card-back.jpg') no-repeat center center;
   background-size: cover;
 }
-
-/* Лицевая сторона */
 .card-front {
   transform: rotateY(180deg);
   background-color: #222;
@@ -128,9 +145,54 @@ h1 {
   align-items: center;
   justify-content: center;
 }
-
 .card-front img {
   width: 100%;
   height: 100%;
   border-radius: 8px;
+}
+
+/* =========================
+   Адаптивные брейкпоинты
+========================= */
+
+/* < 900px => уменьшаем размер карт */
+@media (max-width: 900px) {
+  .card {
+    width: 120px;
+    height: 168px;
+  }
+  .game-info p {
+    font-size: 24px;
+  }
+  .new-game-btn {
+    font-size: 24px;
+    padding: 8px 15px;
+  }
+  h1 {
+    font-size: 60px;
+  }
+  .right-panel {
+    width: 180px;
+  }
+}
+
+/* < 600px => ещё меньше карты */
+@media (max-width: 600px) {
+  .card {
+    width: 90px;
+    height: 126px;
+  }
+  .game-info p {
+    font-size: 20px;
+  }
+  .new-game-btn {
+    font-size: 20px;
+    padding: 6px 12px;
+  }
+  h1 {
+    font-size: 50px;
+  }
+  .right-panel {
+    width: 160px;
+  }
 }
