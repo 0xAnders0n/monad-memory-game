@@ -2,49 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Важно: meta для корректного отображения на телефонах -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MEMORY CARD GAME</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
-<!-- Верхняя панель: слева Time/Attempts, справа NEW GAME -->
-<div class="top-bar">
-  <div class="game-info">
-    <p>
-      <span class="icon">⏳</span> <b>Time:</b> 
-      <span id="timer">0</span> sec 
-      |
-      <span class="icon">🔄</span> <b>Attempts:</b> 
-      <span id="attempts">0</span>
-    </p>
+<!-- Контейнер №1: одна строка: Time/Attempts, Заголовок, NEW GAME + Card Options -->
+<div class="top-container">
+  <div class="time-attempts">
+    <span class="icon">⏳</span> 
+    Time: <span id="timer">0</span> sec 
+    |
+    <span class="icon">🔄</span>
+    Attempts: <span id="attempts">0</span>
   </div>
-  <button class="new-game-btn" id="newGameBtn">NEW GAME</button>
+
+  <h1>MEMORY CARD GAME</h1>
+
+  <div class="game-options">
+    <button class="new-game-btn" id="newGameBtn">NEW GAME</button>
+    <div class="card-options">
+      <p>Select the number of cards:</p>
+      <label>
+        <input type="radio" name="cardCount" value="12" />
+        12
+      </label>
+      <label>
+        <input type="radio" name="cardCount" value="18" />
+        18
+      </label>
+      <label>
+        <input type="radio" name="cardCount" value="24" checked />
+        24
+      </label>
+    </div>
+  </div>
 </div>
 
-<!-- Заголовок по центру -->
-<h1>MEMORY CARD GAME</h1>
-
-<!-- Правая колонка: выбор режима (12/18/24) -->
-<div class="right-panel">
-  <h2>Card Options</h2>
-  <p>Select the number of cards:</p>
-  <label>
-    <input type="radio" name="cardCount" value="12" />
-    12 cards
-  </label><br>
-  <label>
-    <input type="radio" name="cardCount" value="18" />
-    18 cards
-  </label><br>
-  <label>
-    <input type="radio" name="cardCount" value="24" checked />
-    24 cards
-  </label>
-</div>
-
-<!-- Контейнер для прокрутки И центрирования -->
-<div class="board-container">
+<!-- Контейнер №2: карты -->
+<div class="cards-container">
   <div class="game-board" id="gameBoard"></div>
 </div>
 
